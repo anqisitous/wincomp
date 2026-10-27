@@ -1,0 +1,3 @@
+/Users/kennichiroshimizu/Downloads/windowsコンパイラ/build/CMakeFiles/test.dir
+/Users/kennichiroshimizu/Downloads/windowsコンパイラ/build/CMakeFiles/edit_cache.dir
+/Users/kennichiroshimizu/Downloads/windowsコンパイラ/build/CMakeFiles/rebuild_cache.dir
