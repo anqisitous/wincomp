@@ -1,0 +1,30 @@
+name: Create Folder
+
+on:
+  workflow_dispatch:
+    inputs:
+      folder_name:
+        description: '作成するフォルダ名'
+        required: true
+        default: 'memo'
+
+jobs:
+  create-folder:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create folder
+        run: |
+          mkdir -p "${{ github.event.inputs.folder_name }}"
+          touch "${{ github.event.inputs.folder_name }}/.gitkeep"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${{ github.event.inputs.folder_name }}"
+          git commit -m "Add folder: ${{ github.event.inputs.folder_name }}"
+          git push
