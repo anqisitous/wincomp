@@ -3,8 +3,8 @@ name: Create Folder
 on:
   workflow_dispatch:
     inputs:
-      folder_name:
-        description: '作成するフォルダ名'
+      folder_names:
+        description: '作成するフォルダ名（カンマ区切りで複数指定可、例: build/CMakeLists,src/utils）'
         required: true
         default: 'memo'
 
@@ -16,15 +16,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create folder
+      - name: Create folders
         run: |
-          mkdir -p "${{ github.event.inputs.folder_name }}"
-          touch "${{ github.event.inputs.folder_name }}/.gitkeep"
+          IFS=',' read -ra FOLDERS <<< "${{ github.event.inputs.folder_names }}"
+          for folder in "${FOLDERS[@]}"; do
+            trimmed=$(echo "$folder" | xargs)
+            mkdir -p "$trimmed"
+            touch "$trimmed/.gitkeep"
+          done
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "${{ github.event.inputs.folder_name }}"
-          git commit -m "Add folder: ${{ github.event.inputs.folder_name }}"
+          git add .
+          git commit -m "Add folders: ${{ github.event.inputs.folder_names }}" || echo "No changes to commit"
           git push
